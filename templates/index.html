@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LAN Design Optimizer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* 🎨 New "Emerald and Gold" Color Palette */
+    :root {
+      --primary-glow: rgba(0, 217, 128, 0.7); /* Emerald Green */
+      --secondary-glow: rgba(0, 186, 219, 0.7); /* Teal */
+      --accent-glow: #FFC300; /* Gold */
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --text-color: #f0f0f0;
+    }
+
+    body {
+      background: url('https://images.unsplash.com/photo-1581090700227-1e8b2b54fa09?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Roboto', 'Segoe UI', sans-serif;
+      color: var(--text-color);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      /* Updated background gradient */
+      background: linear-gradient(120deg, rgba(0, 20, 10, 0.5), rgba(0, 90, 80, 0.5), rgba(10, 45, 90, 0.4));
+      background-size: 200% 200%;
+      z-index: -1;
+      animation: gradientMove 15s infinite alternate;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    h2 {
+      font-family: 'Orbitron', Arial, sans-serif;
+      font-size: 2.8rem;
+      color: #fff;
+      /* Updated text shadow with new glow colors */
+      text-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--secondary-glow), 0 2px 12px #000;
+      z-index: 1;
+      position: relative;
+      animation: popIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.8) translateY(20px);}
+      100% { opacity: 1; transform: scale(1) translateY(0);}
+    }
+
+    .card, #result {
+      background: var(--card-bg);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 10px 32px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 1;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: cardFadeIn 1.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    .card:hover, #result:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 18px 44px rgba(0,0,0,0.4);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    label {
+        color: #ddd;
+        font-weight: 600;
+    }
+    
+    input, select, button { border-radius: 12px !important; }
+
+    .form-control {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--text-color);
+    }
+    .form-control::placeholder { color: #aaa; }
+    .form-control:focus {
+      background: rgba(0,0,0,0.4);
+      color: #fff;
+      /* Updated focus shadow */
+      box-shadow: 0 0 0 4px rgba(0, 217, 128, 0.4);
+      border-color: var(--primary-glow);
+    }
+    select.form-control option { background: #333; color: #fff; }
+
+    button {
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    button:active { transform: scale(0.96); }
+
+    /* Updated button colors */
+    .btn-primary { background: linear-gradient(90deg, #00AF91, #00D980); }
+    .btn-success { background: linear-gradient(90deg, #00BABD, #00D5C0); color: #000 !important; }
+    
+    .btn-warning {
+      /* Updated CTA button to Gold/Amber */
+      background: linear-gradient(97deg, var(--accent-glow), #FFDA59);
+      color: #222 !important;
+      font-weight: 700;
+      box-shadow: 0 0 15px 0px #FFC30055;
+      animation: pulseGlow 2s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      /* Updated pulse glow to Gold */
+      from { box-shadow: 0 0 5px 0px #FFC30055; }
+      to { box-shadow: 0 0 20px 8px #FFC30099; }
+    }
+    
+    .btn-outline-light {
+        border-color: rgba(255,255,255,0.5);
+        color: #eee;
+    }
+    .btn-outline-light:hover {
+        background: rgba(255,255,255,0.9);
+        color: #333 !important;
+        transform: translateY(-2px);
+    }
+
+    .table {
+      background: rgba(0,0,0,0.2);
+      border-radius: 13px;
+      color: var(--text-color);
+      border: none;
+    }
+    .table th, .table td {
+      vertical-align: middle;
+      text-align: center;
+      border-color: rgba(255,255,255,0.2);
+    }
+    .table thead {
+      /* Updated table header gradient */
+      background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+      color: #fff;
+    }
+    .table-hover tbody tr:hover {
+        /* Updated table row hover color */
+        background-color: rgba(0, 217, 128, 0.2);
+        color: #fff;
+    }
+
+    #result h5 {
+      color: #fff;
+      font-family: 'Orbitron', Arial, sans-serif;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .fw-bold strong {
+      /* Updated total cost color to Gold */
+      color: var(--accent-glow);
+      font-size: 1.15em;
+      text-shadow: 0 0 8px #FFC300aa;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar { width: 10px;}
+    ::-webkit-scrollbar-track { background: #1a1a1a;}
+    ::-webkit-scrollbar-thumb {
+      /* Updated scrollbar gradient */
+      background: linear-gradient(180deg, var(--primary-glow), var(--secondary-glow));
+      border-radius: 10px;
+      border: 2px solid #1a1a1a;
+    }
+  </style>
+</head>
+
+<body class="container py-5">
+
+  <h2 class="text-center mb-4">LAN Design Optimizer</h2>
+
+  <div class="row mb-4">
+    <div class="col-md-4 mb-3 mb-md-0">
+      <div class="card" style="animation-delay: 0.2s;">
+        <label for="nodeName" class="form-label">Add Network Node</label>
+        <input id="nodeName" class="form-control mb-3" placeholder="e.g. A, 1, Router-X">
+        <button onclick="addNode()" class="btn btn-primary w-100">Add Node</button>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card" style="animation-delay: 0.4s;">
+        <div class="row g-2 mb-2 align-items-end">
+          <div class="col">
+            <label for="from" class="form-label">From</label>
+            <select id="from" class="form-select"></select>
+          </div>
+          <div class="col">
+            <label for="to" class="form-label">To</label>
+            <select id="to" class="form-select"></select>
+          </div>
+          <div class="col">
+            <label for="weight" class="form-label">Weight</label>
+            <input id="weight" class="form-control" type="number" placeholder="Cost...">
+          </div>
+            <div class="col-auto">
+              <button onclick="addEdge()" class="btn btn-success w-100">Add Edge</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4" style="animation-delay: 0.6s;">
+      <div class="d-flex flex-wrap gap-2 justify-content-center">
+        <button class="btn btn-warning flex-grow-1" onclick="calculateMST()">Calculate Optimal Network (MST)</button>
+        <button class="btn btn-outline-light" onclick="viewImage()">View MST Image</button>
+        <button class="btn btn-outline-light" onclick="compareGraphs()">Compare Graphs</button>
+        <button class="btn btn-outline-light" onclick="exportJSON()">Export JSON</button>
+        <button class="btn btn-outline-light" onclick="exportTXT()">Export PT File</button>
+      </div>
+  </div>
+
+  <div id="result" style="animation-delay: 0.8s;">
+    <h5 class="mb-3">Minimum Spanning Tree (Optimal Connections)</h5>
+    <table class="table table-hover table-bordered align-middle">
+      <thead><tr><th>From</th><th>To</th><th>Weight</th></tr></thead>
+      <tbody id="mstTableBody"></tbody>
+    </table>
+    <p class="fw-bold mb-1 text-center fs-5"><strong>Total Cost:</strong> ₹<span id="totalCost">0</span></p>
+  </div>
+
+  <script>
+    // --- CORRECTED & ENHANCED JAVASCRIPT ---
+
+    /**
+     * ✅ FIX: Helper function to clear and repopulate node dropdowns.
+     * This ensures the dropdowns are always in sync with the server's graph state.
+     */
+    function updateNodeDropdowns(nodes) {
+        const fromSelect = document.getElementById("from");
+        const toSelect = document.getElementById("to");
+        fromSelect.innerHTML = ''; // Clear existing options
+        toSelect.innerHTML = ''; // Clear existing options
+
+        nodes.forEach(node => {
+            const option = `<option value="${node}">${node}</option>`;
+            fromSelect.innerHTML += option;
+            toSelect.innerHTML += option;
+        });
+    }
+
+    function addNode() {
+      const nodeInput = document.getElementById("nodeName");
+      const node = nodeInput.value.trim();
+      if (!node) {
+        alert("Node name cannot be empty.");
+        return;
+      }
+      
+      fetch('/add_node', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ node })
+      })
+      .then(res => res.json())
+      .then(data => {
+        // ✅ FIX: Use the helper function to rebuild dropdowns with the complete list from the server.
+        if (data.nodes) {
+            updateNodeDropdowns(data.nodes);
+        }
+        if (data.status === 'Node already exists') {
+            alert(data.status); // Inform the user
+        }
+        nodeInput.value = ''; // Clear input field
+      });
+    }
+
+    function addEdge() {
+      const from = document.getElementById("from").value;
+      const to = document.getElementById("to").value;
+      const weightInput = document.getElementById("weight");
+      const weight = weightInput.value;
+      if (from && to && weight && from !== to) {
+        fetch('/add_edge', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ from, to, weight: parseFloat(weight) })
+        }).then(res => res.json()).then(() => {
+          weightInput.value = '';
+        });
+      } else {
+        alert("Please ensure 'From' and 'To' are different and 'Weight' is filled.");
+      }
+    }
+
+    function calculateMST() {
+      fetch('/calculate_mst')
+        .then(res => {
+          if (!res.ok) {
+            // Handle HTTP errors like 400 when the graph is not connected
+            return res.json().then(err => { throw new Error(err.error || 'Calculation failed') });
+          }
+          return res.json();
+        })
+        .then(data => {
+          const body = document.getElementById("mstTableBody");
+          body.innerHTML = '';
+          if (data.mst && data.mst.length > 0) {
+              data.mst.forEach(([u, v, attr]) => {
+                body.innerHTML += `<tr><td>${u}</td><td>${v}</td><td>${attr.weight}</td></tr>`;
+              });
+          } else {
+              body.innerHTML = '<tr><td colspan="3">No spanning tree found. Is the graph connected?</td></tr>';
+          }
+          document.getElementById("totalCost").innerText = data.total_cost || 0;
+        })
+        .catch(error => {
+          const body = document.getElementById("mstTableBody");
+          body.innerHTML = `<tr><td colspan="3" class="text-danger">${error.message}</td></tr>`;
+          document.getElementById("totalCost").innerText = 0;
+        });
+    }
+
+    /**
+     * ✅ FIX: Appends a unique timestamp as a query parameter.
+     * This "cache-busts" the request, forcing the browser to fetch the fresh image from the server
+     * instead of loading an old one from its cache.
+     */
+    function viewImage() {
+      const url = '/mst_image?cache_bust=' + new Date().getTime();
+      window.open(url, '_blank');
+    }
+
+    /**
+     * ✅ FIX: Also applies the cache-busting technique to the comparison image.
+     */
+    function compareGraphs() {
+      const url = '/compare_graphs?cache_bust=' + new Date().getTime();
+      window.open(url, '_blank');
+    }
+
+    /**
+     * ✅ FIX: The backend's `send_file` with `as_attachment=True` prompts a download.
+     * The correct way to trigger this is to simply navigate to the URL.
+     * The browser will handle the "Save As..." dialog automatically.
+     */
+    function exportJSON() {
+      window.location.href = '/export_json';
+    }
+
+    /**
+     * ✅ FIX: Same as exportJSON, just navigate to the endpoint to trigger the download.
+     */
+    function exportTXT() {
+      window.location.href = '/export_txt';
+    }
+    
+    // ✅ FIX: On initial page load, fetch all current nodes and populate the dropdowns correctly.
+    window.onload = function() {
+        fetch('/get_nodes')
+            .then(res => res.json())
+            .then(nodes => {
+                updateNodeDropdowns(nodes);
+                // Also, run an initial MST calculation on the default graph for a nice welcome screen
+                calculateMST(); 
+            });
+    };
+  </script>
+</body>
+</html>
